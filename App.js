@@ -1,14 +1,17 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity,Button, SafeAreaView, ActivityIndicator } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import FadeInView from './components/FadeInView';
 
 import * as Permissions from 'expo-permissions';
 import {Audio} from 'expo-av';
 import * as FileSystem from 'expo-file-system';
+import Constants from 'expo-constants';
+import * as Speech from 'expo-speech';
 
 import SearchBox from './components/SearchBox';
 import Hits from './components/Hits';
+import { map } from 'rxjs/operator/map';
 
 // const recordingOptions = {
 //     // android not currently in use. Not getting results from speech to text with .m4a
@@ -58,6 +61,13 @@ export default class App extends React.Component {
             isRecording: false,
             query: '',
         }
+        this.speak = this.speak.bind(this);
+
+    }
+    speak() {
+      var opt = new Map()
+      opt.set("language", "pl-PL")
+      Speech.speak(this.state.query, opt);
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -208,7 +218,8 @@ export default class App extends React.Component {
                 <View style={{paddingHorizontal: 20}}>
                   <Text>Tutaj będzie tekst: </Text>
                   <Text>{query}</Text>
-                  <Text>{this.text}</Text>
+                    <Text>{this.text}</Text>
+                    <Button title="Press to hear some words" onPress={this.speak} />
                 </View>
             </SafeAreaView>
         );
