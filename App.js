@@ -35,11 +35,24 @@ import Hits from './components/Hits';
 
 const recordingOptions = JSON.parse(JSON.stringify(Audio.RECORDING_OPTIONS_PRESET_LOW_QUALITY));
 
+const slownik = {
+"jeden" : 1,
+"dwa" : 2,
+"trzy" : 3,
+"cztery" : 4,
+"pięć" : 5,
+"sześć" : 6,
+"siedem" : 7,
+"osiem" : 8,
+"dziewięć" : 9,
+"plus" : "+"
+}
 
 export default class App extends React.Component {
     constructor(props) {
         super(props);
         this.recording = null;
+        this.text =''
         this.state = {
             isFetching: false,
             isRecording: false,
@@ -74,7 +87,7 @@ export default class App extends React.Component {
             formData.append('file', {
                 uri,
                 type: 'audio/m4a',
-                name: 'speech2text.m4a'
+                name: new Date() + '.m4a'
             });
             const response = await fetch('http://10.10.1.149:3005/speech', {
                 method: 'POST',
@@ -82,7 +95,10 @@ export default class App extends React.Component {
             });
             const data = await response.json();
             console.log(data);
+
             this.setState({ query: data.transcript });
+            this.text += "\n";
+            this.text += this.translateQuery(data.transcript);
         } catch(error) {
             console.log('There was an error reading file', error);
             this.stopRecording();
@@ -90,33 +106,6 @@ export default class App extends React.Component {
         }
         this.setState({ isFetching: false });
     }
-
-    // getTranscription = async () => {
-    //   this.setState({ isFetching: true })
-    //   try {
-    //     const { uri } = await FileSystem.getInfoAsync(this.recording.getURI())
-    //
-    //     const formData = new FormData()
-    //     formData.append('file', {
-    //       uri,
-    //       type: Platform.OS === 'ios' ? 'audio/x-wav' : 'audio/m4a',
-    //       name: Platform.OS === 'ios' ? `${Date.now()}.wav` :`${Date.now()}.m4a`,
-    //     })
-    //
-    //     const { data } = await axios.post('http://10.10.1.149:3005/speech', formData, {
-    //       headers: {
-    //         'Content-Type': 'multipart/form-data',
-    //       },
-    //     })
-    //
-    //     this.setState({ transcript: data.transcript })
-    //   } catch (error) {
-    //     console.log('There was an error reading file', error)
-    //     this.stopRecording()
-    //     this.resetRecording()
-    //   }
-    //   this.setState({ isFetching: false })
-    // }
 
     startRecording = async () => {
         const { status } = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
@@ -164,6 +153,35 @@ export default class App extends React.Component {
         this.setState({ query });
     }
 
+    translateQuery = (bla) => {
+      if (bla == '') return "nic tu nie ma :(";
+      const mowionko = bla.toLowerCase();
+      console.log(mowionko);
+      var slowa = mowionko.split(' ');
+      console.log(slowa);
+      var liczby = []
+
+      slowa.forEach(function(slowo){
+        if (slowo === "plus") {
+        } else if (Number.isNaN(parseInt(slowo))) {
+          if (typeof slownik[slowo] !== "undefined") {
+            liczby.push(parseInt(slownik[slowo]));
+          }
+        } else {
+          liczby.push(parseInt(slowo));
+        }
+
+      });
+
+      var result = 0;
+
+      liczby.forEach(function(liczba){
+        result += liczba;
+      });
+
+      return result;
+    }
+
     render() {
         const { isRecording, query, isFetching } = this.state;
         return (
@@ -190,6 +208,7 @@ export default class App extends React.Component {
                 <View style={{paddingHorizontal: 20}}>
                   <Text>Tutaj będzie tekst: </Text>
                   <Text>{query}</Text>
+                  <Text>{this.text}</Text>
                 </View>
             </SafeAreaView>
         );
