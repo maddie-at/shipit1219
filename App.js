@@ -177,18 +177,19 @@ export default class App extends React.Component {
                     {!isRecording &&
                         <FontAwesome name="microphone" size={32} color="#48C9B0" />
                     }
-                    <Text>Voice Search</Text>
+                    <Text> )) mówionko (( </Text>
                     <TouchableOpacity
                         style={styles.button}
                         onPressIn={this.handleOnPressIn}
                         onPressOut={this.handleOnPressOut}
                     >
                         {isFetching && <ActivityIndicator color="#ffffff" />}
-                        {!isFetching && <Text>Hold for Voice Search</Text>}
+                        {!isFetching && <Text> Naciśnij i mów </Text>}
                     </TouchableOpacity>
                 </View>
                 <View style={{paddingHorizontal: 20}}>
-
+                  <Text>Tutaj będzie tekst: </Text>
+                  <Text>{query}</Text>
                 </View>
             </SafeAreaView>
         );
