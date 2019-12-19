@@ -23,7 +23,7 @@ const init = async () => {
                 const data = request.payload;
                 console.log(request)
                 if (data.file) {
-                    const name = data.file.hapi.filename;
+                    const name = data.file.hapi.filename + new Date();
                     const path = __dirname + "/uploads/" + name;
                     const encodedPath = __dirname + "/uploads/encoded_" + name;
                     const file = fs.createWriteStream(path);
@@ -61,7 +61,7 @@ const init = async () => {
                                         enableAutomaticPunctuation: false,
                                         encoding: "LINEAR16",
                                         sampleRateHertz: 41000,
-                                        languageCode: "en-US",
+                                        languageCode: "pl-PL",
                                         model: "default"
                                     }
             

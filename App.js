@@ -217,9 +217,9 @@ export default class App extends React.Component {
                 </View>
                 <View style={{paddingHorizontal: 20}}>
                   <Text>Tutaj będzie tekst: </Text>
-                  <Text>{query}</Text>
-                    <Text>{this.text}</Text>
-                    <Button title="Press to hear some words" onPress={this.speak} />
+                  <Text style={styles.text}>{query}</Text>
+                  <Text>{this.text}</Text>
+                  <Button title="Odsłuchaj" onPress={this.speak} />
                 </View>
             </SafeAreaView>
         );
@@ -239,5 +239,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 5,
         marginTop: 20,
+    },
+    text: {
+      margin: 24,
+      fontSize: 18,
+      fontWeight: 'bold',
+      textAlign: 'center',
     }
 });
