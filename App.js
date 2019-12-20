@@ -13,6 +13,8 @@ import * as Speech from 'expo-speech';
 import SearchBox from './components/SearchBox';
 import Hits from './components/Hits';
 import { map } from 'rxjs/operator/map';
+import { createStackNavigator } from 'react-navigation-stack';
+import { createAppContainer } from 'react-navigation';
 
 // const recordingOptions = {
 //     // android not currently in use. Not getting results from speech to text with .m4a
@@ -52,7 +54,7 @@ const slownik = {
 "plus" : "+"
 }
 
-export default class App extends React.Component {
+class MainApp extends React.Component {
     constructor(props) {
         super(props);
         this.recording = null;
@@ -63,7 +65,7 @@ export default class App extends React.Component {
             query: '',
             users: []
           }
-        this.speak = this.speak.bind(this);
+          this.speak = this.speak.bind(this);
     }
 
     addUser(data){
@@ -271,8 +273,9 @@ export default class App extends React.Component {
 
     };
 
-    render() {
 
+
+    render() {
         const { isRecording, query, isFetching } = this.state;
         return (
             <SafeAreaView style={{flex: 1}}>
@@ -294,6 +297,9 @@ export default class App extends React.Component {
                         {isFetching && <ActivityIndicator color="#ffffff" />}
                         {!isFetching && <Text> Naciśnij i mów </Text>}
                     </TouchableOpacity>
+                    <Button style={styles.button}
+                            title="Pokaż historię wynikow"
+                            onPress={() => {this.props.navigation.navigate('Details')}} />
 
                 </View>
                 <ScrollView style = {styles.scrollView} contentContainerStyle={styles.contentContainer}>
@@ -305,7 +311,6 @@ export default class App extends React.Component {
                           subtitle ={ Number.isNaN(item.punkty) ? 0 : item.punkty.toString() }
                           rightSubtitle = {item.text}
                           bottomDivider
-
                         />
                       ))
                       }
@@ -323,6 +328,7 @@ export default class App extends React.Component {
                     <Button style={styles.button}
                             title="Zapisz wyniki"
                             onPress={this.sendResults} />
+
                 </View>
             </SafeAreaView>
         );
@@ -364,3 +370,70 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     }
 });
+
+class DetailsScreen extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            wyniki: []
+        }
+        this.getResults();
+    }
+
+    getResults = async () => {
+        try {
+            const response = await fetch('https://shipit-d1d3.restdb.io/rest/wyniki', {
+                method: 'GET',
+                headers: {
+                    "x-apikey": "5c2e8ccd66292476821c9cb3",
+                    "Content-Type": "application/json"
+                }
+            });
+            const data = await response.json();
+            console.log(data);
+            this.setState({wyniki : data});
+            return data;
+        } catch(error) {
+            console.log('There was an error getting results', error);
+        }
+
+
+    };
+
+    render() {
+        const { wyniki } = this.state;
+        return (
+            <View style={{height : 600}}>
+                <ScrollView style = {styles.scrollView} contentContainerStyle={styles.contentContainer}>
+                    {
+                        wyniki.map((item, i) => (
+                            <ListItem
+                            key={i}
+                            title={item.data}
+                            subtitle={JSON.stringify(item.wyniki)}
+                            bottomDivider
+                            />
+                        ))
+                    }
+                </ScrollView>
+                <Button
+                    title="Go back"
+                    onPress={() => this.props.navigation.goBack()}
+                />
+                <Text> {JSON.stringify(wyniki)} </Text>
+
+            </View>
+        );
+    }
+}
+const RootStack = createStackNavigator({
+        Home: { screen: MainApp },
+        Details: { screen: DetailsScreen }
+    },
+    {
+        initialRouteName: 'Home',
+    });
+
+const AppContainer = createAppContainer(RootStack);
+export default AppContainer;
