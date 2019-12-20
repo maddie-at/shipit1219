@@ -70,13 +70,17 @@ export default class App extends React.Component {
       var mowa = data
               mowa = mowa.replace('nowa gra ', '')
               const userList = mowa.split(' ');
+      var gracze = 'Zaczynamy! Gracze: ';
       console.log(userList);
               const players  = [];
               userList.forEach(user=>{
                 const player = {name: user, punkty: 0, text: ''}
+                gracze += ', '+ user
                 players.push(player)
               })
+      gracze = gracze.replace(', ', '')
       this.setState({users: players});
+      this.setState({query : gracze})
     }
 
     updateScore(data){
