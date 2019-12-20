@@ -256,7 +256,7 @@ export default class App extends React.Component {
                 const response = await fetch('https://shipit-d1d3.restdb.io/rest/wyniki', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
                         "x-apikey": "5c2e8ccd66292476821c9cb3",
                         "Content-Type": "application/json"
                     },
