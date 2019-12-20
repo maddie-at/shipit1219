@@ -91,6 +91,32 @@ const init = async () => {
         }
     })
 
+    server.route({
+        method: 'POST',
+        path: '/results',
+        config: {
+            handler: async (request, h) => {
+                const data = request.payload;
+                const path = __dirname + "/uploads/wyniki-" + new Date().toDateString() + ".json";
+
+                console.log(data)
+
+                let stream = fs.createWriteStream(path);
+                stream.once('open', function(fd) {
+                    stream.write(data);
+                    stream.end();
+                });
+
+                stream.on('error', (err) => console.error(err));
+
+
+                return new Promise(resolve => {
+                    resolve(JSON.stringify({resp: "zapisano"}));
+                });
+            }
+        }
+
+});
     await server.start();
     console.log('Server running on %s', server.info.uri);
 };

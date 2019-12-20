@@ -61,7 +61,10 @@ export default class App extends React.Component {
             isFetching: false,
             isRecording: false,
             query: '',
-            users: []
+            users: [{
+                name: "piesek",
+                punkty: 45
+            }]
           }
         this.speak = this.speak.bind(this);
     }
@@ -242,6 +245,26 @@ export default class App extends React.Component {
       return result;
     }
 
+
+    sendResults = async () => {
+        if (!this.state.users.length) {
+            console.log("nu ma nu ma nej");
+        } else {
+            console.log(JSON.stringify(this.state.users));
+            try {
+                const response = await fetch('http://10.10.1.124:3005/results', {
+                    method: 'POST',
+                    body: JSON.stringify(this.state.users)
+                });
+                const data = await response.json();
+                console.log(data);
+            } catch(error) {
+                console.log('There was an error sending results', error);
+            }
+        }
+
+    };
+
     render() {
 
         const { isRecording, query, isFetching } = this.state;
@@ -285,6 +308,15 @@ export default class App extends React.Component {
                   <Text>{this.text}</Text>
                   <Button title="Odsłuchaj" onPress={this.speak} />
                 </View>
+                <View style={{paddingHorizontal: 60}}>
+                    <FontAwesome style={styles.icon}
+                                 name="gamepad"s
+                                 size={32}
+                                 color="#000000" />
+                    <Button style={styles.button}
+                            title="Zapisz wyniki"
+                            onPress={this.sendResults} />
+                </View>
             </SafeAreaView>
         );
     }
@@ -309,5 +341,11 @@ const styles = StyleSheet.create({
       fontSize: 18,
       fontWeight: 'bold',
       textAlign: 'center',
+    },
+    icon: {
+        margin: 24,
+        fontSize: 32,
+        fontWeight: 'bold',
+        textAlign: 'center',
     }
 });
