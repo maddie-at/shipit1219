@@ -73,7 +73,7 @@ export default class App extends React.Component {
       console.log(userList);
               const players  = [];
               userList.forEach(user=>{
-                const player = {name: user, punkty: 0}
+                const player = {name: user, punkty: 0, text: ''}
                 players.push(player)
               })
       this.setState({users: players});
@@ -86,10 +86,11 @@ export default class App extends React.Component {
 
       let users = [...this.state.users];
       let index = users.findIndex(el => el.name.toLowerCase() === osoba.toLowerCase());
-      let points = parseInt(users[index].punkty)
+      let points = parseInt(users[index].punkty);
       let count = this.countPoints(dodaj);
+      let text = users[index].text+ ' ' + count;
 
-      users[index] = {...users[index], punkty: count + points}
+      users[index] = {...users[index], punkty: count + points, text: text}
       this.setState({ users });
     }
 
@@ -145,8 +146,8 @@ export default class App extends React.Component {
             console.log(data);
 
             this.setState({ query: data.transcript });
-            this.text += "\n";
-            this.text += this.countPoints(data.transcript);
+            //this.text += "\n";
+            //this.text += this.countPoints(data.transcript);
 
             if(data.transcript.includes('nowa gra')){
               this.addUser(data.transcript)
@@ -273,6 +274,7 @@ export default class App extends React.Component {
                           key={i}
                           title={item.name}
                           subtitle ={ Number.isNaN(item.punkty) ? 0 : item.punkty.toString() }
+                          rightSubtitle = {item.text}
                           bottomDivider
 
                         />
