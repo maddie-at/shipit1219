@@ -249,9 +249,14 @@ export default class App extends React.Component {
         } else {
             console.log(JSON.stringify(this.state.users));
             try {
-                const response = await fetch('http://10.10.1.124:3005/results', {
+                const response = await fetch('https://shipit-d1d3.restdb.io/rest/wyniki', {
                     method: 'POST',
-                    body: JSON.stringify(this.state.users)
+                    headers: {
+                        'Content-Type': 'application/json'
+                        "x-apikey": "5c2e8ccd66292476821c9cb3",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({"data": new Date(), "wyniki": this.state.users})
                 });
                 const data = await response.json();
                 console.log(data);
