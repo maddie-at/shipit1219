@@ -61,19 +61,16 @@ export default class App extends React.Component {
             isFetching: false,
             isRecording: false,
             query: '',
-            users: [
-              {name:'test',
-               punkty: 2   
-              }
-            ]  
+            users: []
           }
         this.speak = this.speak.bind(this);
-        this.addUser = this.addUser.bind(this);
     }
+
     addUser(data){
       var mowa = data
-              mowa = mowa.replace('nowa gra', '')
+              mowa = mowa.replace('nowa gra ', '')
               const userList = mowa.split(' ');
+      console.log(userList);
               const players  = [];
               userList.forEach(user=>{
                 const player = {name: user, punkty: 0}
@@ -86,12 +83,13 @@ export default class App extends React.Component {
       var dodaj = data
       const zawodnicy = dodaj.split(' ')
       const osoba = zawodnicy[1]
-      const pkty = parseInt(zawodnicy[2]) 
-                  
+
       let users = [...this.state.users];
       let index = users.findIndex(el => el.name.toLowerCase() === osoba.toLowerCase());
       let points = parseInt(users[index].punkty)
-      users[index] = {...users[index], punkty: pkty + points}
+      let count = this.countPoints(dodaj);
+
+      users[index] = {...users[index], punkty: count + points}
       this.setState({ users });
     }
 
@@ -148,7 +146,7 @@ export default class App extends React.Component {
 
             this.setState({ query: data.transcript });
             this.text += "\n";
-            this.text += this.translateQuery(data.transcript);
+            this.text += this.countPoints(data.transcript);
 
             if(data.transcript.includes('nowa gra')){
               this.addUser(data.transcript)
@@ -159,13 +157,13 @@ export default class App extends React.Component {
           if(data.transcript.toLowerCase().includes('koniec')){
             this.gameOver()
           }
-            
+
         } catch(error) {
             console.log('There was an error reading file', error);
             this.stopRecording();
             this.resetRecording();
         }
-      
+
         this.setState({ isFetching: false });
     }
 
@@ -215,10 +213,9 @@ export default class App extends React.Component {
         this.setState({ query });
     }
 
-    translateQuery = (bla) => {
-      if (bla == '') return "nic tu nie ma :(";
+    countPoints = (bla) => {
+      if (bla == '') return 0;
       const mowionko = bla.toLowerCase();
-      console.log(mowionko);
       var slowa = mowionko.split(' ');
       console.log(slowa);
       var liczby = []
@@ -245,7 +242,7 @@ export default class App extends React.Component {
     }
 
     render() {
-        
+
         const { isRecording, query, isFetching } = this.state;
         return (
             <SafeAreaView style={{flex: 1}}>
@@ -275,13 +272,13 @@ export default class App extends React.Component {
                         <ListItem
                           key={i}
                           title={item.name}
-                          subtitle ={item.punkty}
+                          subtitle ={ Number.isNaN(item.punkty) ? 0 : item.punkty.toString() }
                           bottomDivider
-                          
+
                         />
                       ))
                       }
-                   
+
                   <Text style={styles.text}>{query}</Text>
                   <Text>{this.text}</Text>
                   <Button title="Odsłuchaj" onPress={this.speak} />
