@@ -92,6 +92,10 @@ export default class App extends React.Component {
 
       users[index] = {...users[index], punkty: count + points, text: text}
       this.setState({ users });
+      let sorted = users.sort((a, b) => b.punkty - a.punkty)
+      let wygrywa = "Wygrywa : " + sorted[0].name + ' punkty ' + sorted[0].punkty;
+      this.setState({query: wygrywa})
+
     }
 
     gameOver(){
