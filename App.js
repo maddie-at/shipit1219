@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity,Button, SafeAreaView, ActivityIndicator } from 'react-native';
+import { List, ListItem } from 'react-native-elements'
 import { FontAwesome } from '@expo/vector-icons';
 import FadeInView from './components/FadeInView';
 
@@ -60,10 +61,49 @@ export default class App extends React.Component {
             isFetching: false,
             isRecording: false,
             query: '',
-        }
+            users: [
+              {name:'test',
+               punkty: 2   
+              }
+            ]  
+          }
         this.speak = this.speak.bind(this);
+        this.addUser = this.addUser.bind(this);
+    }
+    addUser(data){
+      var mowa = data
+              mowa = mowa.replace('nowa gra', '')
+              const userList = mowa.split(' ');
+              const players  = [];
+              userList.forEach(user=>{
+                const player = {name: user, punkty: 0}
+                players.push(player)
+              })
+      this.setState({users: players});
+    }
+
+    updateScore(data){
+      var dodaj = data
+      const zawodnicy = dodaj.split(' ')
+      const osoba = zawodnicy[1]
+      const pkty = parseInt(zawodnicy[2]) 
+                  
+      let users = [...this.state.users];
+      let index = users.findIndex(el => el.name.toLowerCase() === osoba.toLowerCase());
+      let points = parseInt(users[index].punkty)
+      users[index] = {...users[index], punkty: pkty + points}
+      this.setState({ users });
+    }
+
+    gameOver(){
+      let users = [...this.state.users];
+      let sorted = users.sort((a, b) => b.punkty - a.punkty)
+      let wygrany = "Wygral player : " + sorted[0].name
+      this.setState({query: wygrany})
+
 
     }
+
     speak() {
       var opt = new Map()
       opt.set("language", "pl-PL")
@@ -109,11 +149,23 @@ export default class App extends React.Component {
             this.setState({ query: data.transcript });
             this.text += "\n";
             this.text += this.translateQuery(data.transcript);
+
+            if(data.transcript.includes('nowa gra')){
+              this.addUser(data.transcript)
+          }
+          if(data.transcript.toLowerCase().includes('dodaj')){
+            this.updateScore(data.transcript)
+          }
+          if(data.transcript.toLowerCase().includes('koniec')){
+            this.gameOver()
+          }
+            
         } catch(error) {
             console.log('There was an error reading file', error);
             this.stopRecording();
             this.resetRecording();
         }
+      
         this.setState({ isFetching: false });
     }
 
@@ -193,6 +245,7 @@ export default class App extends React.Component {
     }
 
     render() {
+        
         const { isRecording, query, isFetching } = this.state;
         return (
             <SafeAreaView style={{flex: 1}}>
@@ -217,6 +270,18 @@ export default class App extends React.Component {
                 </View>
                 <View style={{paddingHorizontal: 20}}>
                   <Text>Tutaj będzie tekst: </Text>
+                      {
+                       this.state.users.map((item, i) => (
+                        <ListItem
+                          key={i}
+                          title={item.name}
+                          subtitle ={item.punkty}
+                          bottomDivider
+                          
+                        />
+                      ))
+                      }
+                   
                   <Text style={styles.text}>{query}</Text>
                   <Text>{this.text}</Text>
                   <Button title="Odsłuchaj" onPress={this.speak} />

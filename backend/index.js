@@ -23,7 +23,7 @@ const init = async () => {
                 const data = request.payload;
                 console.log(request)
                 if (data.file) {
-                    const name = data.file.hapi.filename + new Date();
+                    const name = data.file.hapi.filename;
                     const path = __dirname + "/uploads/" + name;
                     const encodedPath = __dirname + "/uploads/encoded_" + name;
                     const file = fs.createWriteStream(path);
