@@ -304,12 +304,17 @@ export default class App extends React.Component {
                   <ScrollView style = {styles.scrollView} contentContainerStyle={styles.contentContainer}>
                       {
                        this.state.users.map((item, i) => (
-                        <ListItem
+                        <ListItem containerStyle={{borderRadius: 5}}
                           key={i}
                           title={item.name}
                           subtitle ={ Number.isNaN(item.punkty) ? 0 : item.punkty.toString() }
                           rightSubtitle = {item.text}
                           bottomDivider
+                          linearGradientProps={{
+                            colors: ['#FF9800', '#F44336'],
+                            start: [1, 0],
+                            end: [0.2, 0],
+                          }}
 
                         />
                       ))
@@ -344,7 +349,8 @@ const styles = StyleSheet.create({
     scrollView: {
       backgroundColor: 'pink',
       marginHorizontal: 10,
-      marginVertical: 10
+      marginVertical: 10,
+      borderRadius: 5,
     },
     contentContainer: {
       paddingVertical: 0
