@@ -418,7 +418,7 @@ class DetailsScreen extends React.Component {
     render() {
         const { wyniki } = this.state;
         return (
-            <View style={{height : 450}}>
+            <View style={{height : 450, marginTop:40}}>
                 <ScrollView style = {styles.scrollView} contentContainerStyle={styles.contentContainer}>
                     {
                         wyniki.map((item, i) => (
@@ -442,8 +442,15 @@ class DetailsScreen extends React.Component {
     }
 }
 const RootStack = createStackNavigator({
-        Home: { screen: MainApp },
-        Details: { screen: DetailsScreen }
+        Home: { screen: MainApp,
+          navigationOptions: {
+            header: null,
+        } },
+        
+        Details: { screen: DetailsScreen,
+          navigationOptions: {
+            header: null,
+        } }
     },
     {
         initialRouteName: 'Home',
