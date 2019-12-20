@@ -97,7 +97,7 @@ const init = async () => {
         config: {
             handler: async (request, h) => {
                 const data = request.payload;
-                const path = __dirname + "/uploads/wyniki-" + new Date().toDateString() + ".json";
+                const path = __dirname + "/uploads/wyniki-" + new Date() + ".json";
 
                 console.log(data)
 
@@ -115,8 +115,49 @@ const init = async () => {
                 });
             }
         }
+    });
 
-});
+    server.route({
+        method: 'GET',
+        path: '/results',
+        config: {
+            handler: async (request, h) => {
+                const data = request.payload;
+                const path = __dirname + "/uploads";
+                let results = []
+
+                fs.readdir(path, function (err, files) {
+                    if (err) {
+                        return console.log('Unable to scan directory: ' + err);
+                    }
+                    files.forEach(function (file) {
+                        console.log(file);
+                        if (file.startsWith("wyniki")) {
+                            let wynik;
+                            try {
+                                let rawdata = fs.readFileSync(path +"/"+file);
+                                wynik = JSON.parse(rawdata);
+                                console.log("wynik: ");
+                                console.log(wynik);
+                            } catch (error) {
+                                console.log(error);
+                            }
+
+                            results.push(wynik);
+
+                        }
+                    });
+                });
+
+                return new Promise(resolve => {
+                    resolve(JSON.stringify({results: results}));
+                });
+            }
+        }
+    });
+
+
+
     await server.start();
     console.log('Server running on %s', server.info.uri);
 };
