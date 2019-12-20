@@ -300,7 +300,8 @@ export default class App extends React.Component {
                     </TouchableOpacity>
 
                 </View>
-                <ScrollView style = {styles.scrollView} contentContainerStyle={styles.contentContainer}>
+                <View style={{height: 160}} >
+                  <ScrollView style = {styles.scrollView} contentContainerStyle={styles.contentContainer}>
                       {
                        this.state.users.map((item, i) => (
                         <ListItem
@@ -313,7 +314,8 @@ export default class App extends React.Component {
                         />
                       ))
                       }
-                      </ScrollView>
+                  </ScrollView>
+                </View>
                 <View style={{paddingHorizontal: 20}}>
                   <Text style={styles.text}>{query}</Text>
                   <Text>{this.text}</Text>
