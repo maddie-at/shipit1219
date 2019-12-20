@@ -421,12 +421,14 @@ class DetailsScreen extends React.Component {
                 <ScrollView style = {styles.scrollView} contentContainerStyle={styles.contentContainer}>
                     {
                         wyniki.map((item, i) => (
-                            <ListItem
-                            key={i}
-                            title={item.data}
-                            subtitle={JSON.stringify(item.wyniki)}
-                            bottomDivider
-                            />
+                        item.wyniki.map((res, idx) => (
+                                <ListItem
+                                    key={idx}
+                                    title={new Date(item.data).toLocaleString("pl-PL") + ": " + res.name}
+                                    subtitle={"Punkty: " + res.punkty}
+                                    bottomDivider
+                                />
+                            ))
                         ))
                     }
                 </ScrollView>
@@ -434,8 +436,6 @@ class DetailsScreen extends React.Component {
                     title="Go back"
                     onPress={() => this.props.navigation.goBack()}
                 />
-                <Text> {JSON.stringify(wyniki)} </Text>
-
             </View>
         );
     }
