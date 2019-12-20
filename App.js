@@ -92,12 +92,16 @@ export default class App extends React.Component {
 
       users[index] = {...users[index], punkty: count + points, text: text}
       this.setState({ users });
+      let sorted = users.sort((a, b) => b.punkty - a.punkty)
+      let wygrywa = "Wygrywa : " + sorted[0].name + ' punkty ' + sorted[0].punkty;
+      this.setState({query: wygrywa})
+
     }
 
     gameOver(){
       let users = [...this.state.users];
       let sorted = users.sort((a, b) => b.punkty - a.punkty)
-      let wygrany = "Wygral player : " + sorted[0].name
+      let wygrany = "Wygrał : " + sorted[0].name + ' gratulacje'
       this.setState({query: wygrany})
 
 
@@ -290,8 +294,9 @@ export default class App extends React.Component {
                         {isFetching && <ActivityIndicator color="#ffffff" />}
                         {!isFetching && <Text> Naciśnij i mów </Text>}
                     </TouchableOpacity>
+
                 </View>
-                <ScrollView >
+                <ScrollView style = {styles.scrollView} contentContainerStyle={styles.contentContainer}>
                       {
                        this.state.users.map((item, i) => (
                         <ListItem
@@ -330,6 +335,14 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
     },
+    scrollView: {
+      backgroundColor: 'pink',
+      marginHorizontal: 10,
+      marginVertical: 10
+    },
+    contentContainer: {
+      paddingVertical: 0
+    },
     button: {
         backgroundColor: '#48C9B0',
         paddingVertical: 20,
@@ -339,7 +352,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     text: {
-      margin: 24,
+      margin: 4,
       fontSize: 18,
       fontWeight: 'bold',
       textAlign: 'center',
