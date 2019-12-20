@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity,Button, SafeAreaView, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity,Button, SafeAreaView, ActivityIndicator,  ScrollView} from 'react-native';
 import { List, ListItem } from 'react-native-elements'
 import { FontAwesome } from '@expo/vector-icons';
 import FadeInView from './components/FadeInView';
@@ -61,10 +61,7 @@ export default class App extends React.Component {
             isFetching: false,
             isRecording: false,
             query: '',
-            users: [{
-                name: "piesek",
-                punkty: 45
-            }]
+            users: []
           }
         this.speak = this.speak.bind(this);
     }
@@ -289,8 +286,7 @@ export default class App extends React.Component {
                         {!isFetching && <Text> Naciśnij i mów </Text>}
                     </TouchableOpacity>
                 </View>
-                <View style={{paddingHorizontal: 20}}>
-                  <Text>Tutaj będzie tekst: </Text>
+                <ScrollView >
                       {
                        this.state.users.map((item, i) => (
                         <ListItem
@@ -303,7 +299,8 @@ export default class App extends React.Component {
                         />
                       ))
                       }
-
+                      </ScrollView>
+                <View style={{paddingHorizontal: 20}}>
                   <Text style={styles.text}>{query}</Text>
                   <Text>{this.text}</Text>
                   <Button title="Odsłuchaj" onPress={this.speak} />
