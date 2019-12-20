@@ -405,7 +405,15 @@ class DetailsScreen extends React.Component {
             });
             const data = await response.json();
             console.log(data);
-            this.setState({wyniki : data});
+            let lista = [];
+            data.map((item, i) => {
+                lista.push({data: new Date(item.data).toLocaleString("pl-PL")});
+                item.wyniki.forEach((osoba, idx) => {
+                    lista.push({name: osoba.name, punkty: osoba.punkty});
+                });
+            });
+
+            this.setState({wyniki : lista});
             return data;
         } catch(error) {
             console.log('There was an error getting results', error);
@@ -421,15 +429,13 @@ class DetailsScreen extends React.Component {
                 <ScrollView style = {styles.scrollView} contentContainerStyle={styles.contentContainer}>
                     {
                         wyniki.map((item, i) => (
-                        item.wyniki.map((res, idx) => (
                                 <ListItem
-                                    key={idx}
-                                    title={new Date(item.data).toLocaleString("pl-PL") + ": " + res.name}
-                                    subtitle={"Punkty: " + res.punkty}
+                                    key={i}
+                                    title={item.data ? item.data : item.name}
+                                    subtitle={item.punkty ? "Punkty: " + item.punkty : ">>>>>>>"}
                                     bottomDivider
                                 />
                             ))
-                        ))
                     }
                 </ScrollView>
                 <Button
