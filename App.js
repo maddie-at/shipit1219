@@ -349,7 +349,7 @@ class MainApp extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 40,
+        marginTop: 20,
         backgroundColor: '#fff',
         alignItems: 'center',
     },
@@ -369,6 +369,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 5,
         marginTop: 20,
+        marginBottom: 20
     },
     text: {
       margin: 4,
@@ -377,7 +378,7 @@ const styles = StyleSheet.create({
       textAlign: 'center',
     },
     icon: {
-        margin: 24,
+        margin: 5,
         fontSize: 32,
         fontWeight: 'bold',
         textAlign: 'center',
@@ -417,7 +418,7 @@ class DetailsScreen extends React.Component {
     render() {
         const { wyniki } = this.state;
         return (
-            <View style={{height : 600}}>
+            <View style={{height : 450}}>
                 <ScrollView style = {styles.scrollView} contentContainerStyle={styles.contentContainer}>
                     {
                         wyniki.map((item, i) => (
