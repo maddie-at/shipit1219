@@ -65,20 +65,24 @@ class MainApp extends React.Component {
             query: '',
             users: []
           }
-          this.speak = this.speak.bind(this);
+        this.speak = this.speak.bind(this);
     }
 
     addUser(data){
       var mowa = data
               mowa = mowa.replace('nowa gra ', '')
               const userList = mowa.split(' ');
+      var gracze = 'Zaczynamy! Gracze: ';
       console.log(userList);
               const players  = [];
               userList.forEach(user=>{
                 const player = {name: user, punkty: 0, text: ''}
+                gracze += ', '+ user
                 players.push(player)
               })
+      gracze = gracze.replace(', ', '')
       this.setState({users: players});
+      this.setState({query : gracze})
     }
 
     updateScore(data){
@@ -302,19 +306,27 @@ class MainApp extends React.Component {
                             onPress={() => {this.props.navigation.navigate('Details')}} />
 
                 </View>
-                <ScrollView style = {styles.scrollView} contentContainerStyle={styles.contentContainer}>
+                <View style={{height: 160}} >
+                  <ScrollView style = {styles.scrollView} contentContainerStyle={styles.contentContainer}>
                       {
                        this.state.users.map((item, i) => (
-                        <ListItem
+                        <ListItem containerStyle={{borderRadius: 5}}
                           key={i}
                           title={item.name}
                           subtitle ={ Number.isNaN(item.punkty) ? 0 : item.punkty.toString() }
                           rightSubtitle = {item.text}
                           bottomDivider
+                          linearGradientProps={{
+                            colors: ['#FF9800', '#F44336'],
+                            start: [1, 0],
+                            end: [0.2, 0],
+                          }}
+
                         />
                       ))
                       }
-                      </ScrollView>
+                  </ScrollView>
+                </View>
                 <View style={{paddingHorizontal: 20}}>
                   <Text style={styles.text}>{query}</Text>
                   <Text>{this.text}</Text>
@@ -344,7 +356,8 @@ const styles = StyleSheet.create({
     scrollView: {
       backgroundColor: 'pink',
       marginHorizontal: 10,
-      marginVertical: 10
+      marginVertical: 10,
+      borderRadius: 5,
     },
     contentContainer: {
       paddingVertical: 0
