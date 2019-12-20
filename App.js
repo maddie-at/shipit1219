@@ -306,7 +306,7 @@ class MainApp extends React.Component {
                             onPress={() => {this.props.navigation.navigate('Details')}} />
 
                 </View>
-                <View style={{height: 160}} >
+                <View style={{height: 240}} >
                   <ScrollView style = {styles.scrollView} contentContainerStyle={styles.contentContainer}>
                       {
                        this.state.users.map((item, i) => (
